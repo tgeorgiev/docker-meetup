@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hello network service</title>
+  <style type="text/css">
+    body {
+      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    }
+    body div {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      text-align: center;
+      transition: font-size 0.5s, top 0.5s;
+      text-shadow: 2px 8px 6px rgba(0,0,0,0.2),
+                   0px -5px 35px rgba(255,255,255,0.3);
+    }
+    .hidden {
+      font-size: 0px;
+      top: 90px;
+    }
+    .former {
+      font-size: 40px;
+      top: 70px;
+    }
+    .latest {
+      top: 150px;
+      font-size: 70px;
+    }
+  </style>
+</head>
+<body>
+  <script type="text/javascript">
+    function refresh() {
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          var hiddenEl = document.querySelector('.hidden');
+          if (hiddenEl) {
+            document.body.removeChild(hiddenEl);
+          }
+
+          var formerEl = document.querySelector('.former');
+          if (formerEl) {
+            formerEl.className = 'hidden';
+          }
+
+          var latestEl = document.querySelector('.latest');
+          if (latestEl) {
+            latestEl.className = 'former';
+          }
+
+          var el = document.createElement("div");
+          el.className = 'latest';
+          el.innerText = xhr.responseText;
+          document.body.appendChild(el);
+
+          setTimeout(refresh, 1000);
+        }
+      }
+      xhr.open('GET', '/hello');
+      xhr.send();
+    }
+
+    refresh();
+  </script>
+</body>
+</html>
